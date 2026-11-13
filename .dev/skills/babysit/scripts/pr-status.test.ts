@@ -9,7 +9,6 @@ const later = Date.parse('2026-09-28T11:00:00Z');
 
 type Input = Parameters<typeof summarize>[0];
 
-/** A mergeable open PR with green checks, overridable per test. */
 function pr(overrides: Partial<Input['pr']> = {}): Input['pr'] {
   return {
     number: 7,
@@ -29,7 +28,6 @@ function pr(overrides: Partial<Input['pr']> = {}): Input['pr'] {
   };
 }
 
-/** A review thread opened by `author`, optionally with one reply by the owner. */
 function thread(isResolved: boolean, author = 'review-bot[bot]', replyBody?: string): Input['threads'][number] {
   const first = { databaseId: 11, author: { login: author }, body: 'bug', url: 'u' };
   return {
@@ -43,7 +41,6 @@ function thread(isResolved: boolean, author = 'review-bot[bot]', replyBody?: str
   };
 }
 
-/** An issue comment by `login` at `createdAt`. */
 function comment(login: string, createdAt: string, body = 'review', acknowledged = false) {
   return { id: 1, user: { login }, created_at: createdAt, html_url: 'u', body, acknowledged };
 }

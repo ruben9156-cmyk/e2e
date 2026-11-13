@@ -8,11 +8,8 @@ button, virtualized lists whose off-screen rows are not in the tree, a
 WebView, an OS permission dialog, out-of-process payment sheets. A test
 either handles that surface or fails for exactly that reason.
 
-The app is copied from `apps/mobile-benchmark` in the tester-army monorepo,
-where the same scenarios gate the autonomous QA agent. Keep diffs against
-that source minimal so scenarios port both ways. Scenarios distilled from
-real production apps name no company: describe the surface, never the
-source.
+Scenarios distilled from real production apps name no company: describe the
+surface, never the source.
 
 ## Layout
 
@@ -31,13 +28,8 @@ from the directory it runs in.
 - `e2e.agent.config.ts` + `tests-agent/`: the agentic suite, derived from the
   deterministic config. One `agent.act` per scenario with the catalog
   description as its goal and a deterministic check on the success message.
-  A scenario whose tree is merged or hidden on purpose tells the model so
-  and is judged from a screenshot; one whose surface renders out of process
-  (PassKit, the photo picker) says the sheet is not in the tree, and the
-  model asks for the screenshot itself; the photo picker seeds its receipt
-  into every booted simulator first. Scenarios the
-  harness cannot finish yet are declared with a `gap` and skip with that
-  reason, so every run shows what is still missing.
+  Scenarios the harness cannot finish yet are declared with a `gap` and skip
+  with that reason, so every run shows what is still missing.
 
 The deterministic suite runs in CI on every pull request (`.github/workflows/mobile.yml`):
 an iOS simulator on a macOS runner and an Android emulator on Linux, with the
@@ -52,21 +44,6 @@ replays fails its step as `REPLAY_STALE` instead of handing it to the model.
 iOS replays leniently: three recordings hand off on every run, three more
 on the CI simulator only, and strict mode waits on them.
 
-- Debounced Search: the replay looks before the debounced results render,
-  and relocation settles on the search field's wrapper, which reads
-  "Benchmark Target" too, instead of waiting for the result row.
-- Choice Controls: the keyboard the notes field raises covers the Mushrooms
-  checkbox, which iOS then drops from the tree.
-- Stripe PaymentSheet: the card form's fields are not in the tree after the
-  Card tab is tapped on the sheet.
-- Login Form (CI only): the CI simulator reads the screen's route as its
-  title, `Login Form`, where a Mac reads the back button's `Benchmark
-  Examples`, so the recorded start route does not match.
-- Photo Picker (CI only): the recorded tap names the photo by the time it
-  was seeded, `Photo, October 03, 22:50`, which is another time on another
-  simulator.
-- Permission Prompt (CI only): every recorded action replays, but the
-  recorded end state, `Microphone enabled`, does not show.
 Each job posts its first pass to the pull request as one comment (`e2e ios:
 44 passed`, `e2e android agent: ...`) through `@e2e-dev/github`, like the web
 benchmark's two. The second pass over failed tests posts nothing, so a green
